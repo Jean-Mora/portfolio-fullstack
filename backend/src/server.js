@@ -24,6 +24,9 @@ if (!mongoUri) {
   process.exit(1);
 }
 
+const cors = require('cors');
+app.use(cors()); // Esto permite que Vercel pueda leer tus datos.
+
 // --- DB ---
 mongoose
   .connect(mongoUri)
