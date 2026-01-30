@@ -10,7 +10,7 @@ const Post = () => {
       try {
         // --- CAMBIO AQUÍ ---
         // Definimos la URL usando la variable que configuraste en Vercel
-        const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
         
         // Ahora usamos esa variable en la petición
         const res = await axios.get(`${API_URL}/api/posts/${id}`);
