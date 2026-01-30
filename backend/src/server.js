@@ -16,6 +16,7 @@ import cvRoutes from './routes/cv.routes.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 
 const app = express();
+app.set('trust proxy', 1);
 
 // --- DB CONNECTION ---
 const mongoUri = process.env.MONGO_URI; 
