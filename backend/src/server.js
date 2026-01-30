@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: './.env' });
+dotenv.config(); // Render ya maneja las variables, no necesitas el path './.env'
 
 import express from 'express';
 import mongoose from 'mongoose';
@@ -17,17 +17,13 @@ import { errorHandler } from './middlewares/error.middleware.js';
 
 const app = express();
 
-// --- ENV ---
-const mongoUri = process.env.MONGO_URI;
+// --- DB CONNECTION ---
+const mongoUri = process.env.MONGO_URI; 
 if (!mongoUri) {
-  console.error('❌ ERROR: MONGO_URI no definida');
+  console.error('❌ ERROR: MONGO_URI no definida en las variables de entorno');
   process.exit(1);
 }
 
-const cors = require('cors');
-app.use(cors()); // Esto permite que Vercel pueda leer tus datos.
-
-// --- DB ---
 mongoose
   .connect(mongoUri)
   .then(() => console.log('✅ MongoDB Conectado'))
@@ -38,17 +34,23 @@ mongoose
 
 // --- MIDDLEWARES ---
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+
+// Configuración de CORS flexible para que funcione con Vercel
+app.use(cors({
+  origin: '*', // Permite peticiones de cualquier lugar (ideal para pruebas ahora)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
-app.use(
-  '/api/',
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: 'Demasiadas peticiones. Intenta más tarde.',
-  })
-);
+// --- RATE LIMIT ---
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Demasiadas peticiones. Intenta más tarde.',
+});
+app.use('/api/', limiter);
 
 // --- RUTAS ---
 app.use('/api/auth', authRoutes);
