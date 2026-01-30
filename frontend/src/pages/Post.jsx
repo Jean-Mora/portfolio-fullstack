@@ -2,9 +2,6 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// ... (resto de tus imports igual)
-import axios from "axios";
-
 const Post = () => {
   // ... (tus estados de id, post, loading igual)
 
