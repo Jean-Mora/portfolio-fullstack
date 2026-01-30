@@ -2,16 +2,23 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// ... (resto de tus imports igual)
+import axios from "axios";
+
 const Post = () => {
-  const { id } = useParams();
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // ... (tus estados de id, post, loading igual)
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/posts/${id}`);
+        // --- CAMBIO AQUÍ ---
+        // Definimos la URL usando la variable que configuraste en Vercel
+        const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+        
+        // Ahora usamos esa variable en la petición
+        const res = await axios.get(`${API_URL}/api/posts/${id}`);
+        // -------------------
+        
         setPost(res.data);
       } catch (error) {
         console.error("Error al cargar el post", error);
@@ -23,6 +30,8 @@ const Post = () => {
 
     fetchPost();
   }, [id]);
+
+  // ... (el resto del diseño con Tailwind se queda exactamente igual)
 
   if (loading) {
     return (

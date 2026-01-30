@@ -10,8 +10,12 @@ const Admin = () => {
     e.preventDefault();
     setLoading(true);
     
+    // Obtenemos la URL de la variable de entorno o usamos localhost por defecto
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
     try {
-      await axios.post("http://localhost:5000/api/posts", {
+      // Reemplazamos la URL fija por la variable dinámica
+      await axios.post(`${API_URL}/api/posts`, {
         title,
         content,
       });
